@@ -27,7 +27,7 @@ using the Cordova / Phonegap command line interface.
 
 This plugin creates a cordovaHTTP service inside of a cordovaHTTP module.  You must load the module when you create your app's module.
 
-Dont need import anything in the main module!!! UPDATE!!! all functions be must be called like this window.cordovaHTTP.post...
+Dont need import anything in the main module!!! UPDATE!!! all functions be must be called like this window.cordovaHTTP.post and dont with cordovaHTTP.post...
 
     //var app = angular.module('myApp', ['ngRoute', 'ngAnimate', 'cordovaHTTP']);
     
