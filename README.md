@@ -17,9 +17,9 @@ Please check [CHANGELOG.md](CHANGELOG.md) for details about updating to a new ve
 The plugin conforms to the Cordova plugin specification, it can be installed
 using the Cordova / Phonegap command line interface.
 
-    phonegap plugin add cordova-plugin-http
+    phonegap plugin add https://github.com/gergom/cordova-HTTP.git
 
-    cordova plugin add cordova-plugin-http
+    cordova plugin add https://github.com/gergom/cordova-HTTP.git
 
 ## Usage
 
@@ -27,7 +27,9 @@ using the Cordova / Phonegap command line interface.
 
 This plugin creates a cordovaHTTP service inside of a cordovaHTTP module.  You must load the module when you create your app's module.
 
-    var app = angular.module('myApp', ['ngRoute', 'ngAnimate', 'cordovaHTTP']);
+Dont need import anything in the main module!!! UPDATE!!! all functions be must be called like this window.cordovaHTTP.post...
+
+    //var app = angular.module('myApp', ['ngRoute', 'ngAnimate', 'cordovaHTTP']);
     
 You can then inject the cordovaHTTP service into your controllers.  The functions can then be used identically to the examples shown below except that instead of accepting success and failure callback functions, each function returns a promise.  For more information on promises in AngularJS read the [AngularJS docs](http://docs.angularjs.org/api/ng/service/$q).  For more info on promises in general check out this article on [html5rocks](http://www.html5rocks.com/en/tutorials/es6/promises/).  Make sure that you load cordova.js or phonegap.js after AngularJS is loaded.
 
