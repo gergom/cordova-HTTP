@@ -20,6 +20,19 @@ using the Cordova / Phonegap command line interface.
     phonegap plugin add https://github.com/gergom/cordova-HTTP.git
 
     cordova plugin add https://github.com/gergom/cordova-HTTP.git
+    
+## Work in Ionic (Android and IOS)
+
+In the projects with ionic for use the command ionic state reset for install the plugins change the file package.json in the root of project and add a couple lines for reference this fork in yours plugins.
+
+Note: At the end of README see an example of usage plugin with promise por call a service.
+
+    "cordovaPlugins": [
+        {
+          "locator": "https://github.com/gergom/cordova-HTTP.git",
+          "id": "cordova-plugin-http"
+        }
+      ]
 
 ## Usage
 
@@ -43,17 +56,17 @@ This plugin registers a `cordovaHTTP` global on window
 ### getBasicAuthHeader
 This returns an object representing a basic HTTP Authorization header of the form `{'Authorization': 'Basic base64encodedusernameandpassword'}`
 
-    var header = cordovaHTTP.getBasicAuthHeader("user", "password");
+    var header = window.cordovaHTTP.getBasicAuthHeader("user", "password");
 
 ### useBasicAuth
 This sets up all future requests to use Basic HTTP authentication with the given username and password.
 
-    cordovaHTTP.useBasicAuth("user", "password");
+    window.cordovaHTTP.useBasicAuth("user", "password");
     
 ### setHeader
 Set a header for all future requests.  Takes a header and a value.
 
-    cordovaHTTP.setHeader("Header", "Value");
+    window.cordovaHTTP.setHeader("Header", "Value");
     
 
 ## Async Functions
@@ -66,7 +79,7 @@ To use SSL pinning you must include at least one .cer SSL certificate in your ap
 
 As an alternative, you can store your .cer files in the www/certificates folder.
 
-    cordovaHTTP.enableSSLPinning(true, function() {
+    window.cordovaHTTP.enableSSLPinning(true, function() {
         console.log('success!');
     }, function() {
         console.log('error :(');
@@ -75,7 +88,7 @@ As an alternative, you can store your .cer files in the www/certificates folder.
 ### acceptAllCerts
 Accept all SSL certificates.  Or disable accepting all certificates.  This defaults to false.
 
-    cordovaHTTP.acceptAllCerts(true, function() {
+    window.cordovaHTTP.acceptAllCerts(true, function() {
         console.log('success!');
     }, function() {
         console.log('error :(');
@@ -84,7 +97,7 @@ Accept all SSL certificates.  Or disable accepting all certificates.  This defau
 ### validateDomainName
 Whether or not to validate the domain name in the certificate.  This defaults to true.
 
-    cordovaHTTP.validateDomainName(false, function() {
+    window.cordovaHTTP.validateDomainName(false, function() {
         console.log('success!');
     }, function() {
         console.log('error :(');
@@ -106,7 +119,7 @@ The success function receives a response object with 3 properties: status, data,
     
 Most apis will return JSON meaning you'll want to parse the data like in the example below:
 
-    cordovaHTTP.post("https://google.com/", {
+    window.cordovaHTTP.post("https://google.com/", {
         id: 12,
         message: "test"
     }, { Authorization: "OAuth2: token" }, function(response) {
@@ -142,7 +155,7 @@ The error function receives a response object with 3 properties: status, error a
 ### get
 Execute a GET request.  Takes a URL, parameters, and headers.  See the [post](#post) documentation for details on what is returned on success and failure.
 
-    cordovaHTTP.get("https://google.com/", {
+    window.cordovaHTTP.get("https://google.com/", {
         id: 12,
         message: "test"
     }, { Authorization: "OAuth2: token" }, function(response) {
@@ -154,7 +167,7 @@ Execute a GET request.  Takes a URL, parameters, and headers.  See the [post](#p
 ### uploadFile
 Uploads a file saved on the device.  Takes a URL, parameters, headers, filePath, and the name of the parameter to pass the file along as.  See the [post](#post) documentation for details on what is returned on success and failure.
 
-    cordovaHTTP.uploadFile("https://google.com/", {
+    window.cordovaHTTP.uploadFile("https://google.com/", {
         id: 12,
         message: "test"
     }, { Authorization: "OAuth2: token" }, "file:///somepicture.jpg", "picture", function(response) {
@@ -166,7 +179,7 @@ Uploads a file saved on the device.  Takes a URL, parameters, headers, filePath,
 ### downloadFile
 Downloads a file and saves it to the device.  Takes a URL, parameters, headers, and a filePath.  See [post](#post) documentation for details on what is returned on failure.  On success this function returns a cordova [FileEntry object](http://cordova.apache.org/docs/en/3.3.0/cordova_file_file.md.html#FileEntry).
 
-    cordovaHTTP.downloadFile("https://google.com/", {
+    window.cordovaHTTP.downloadFile("https://google.com/", {
         id: 12,
         message: "test"
     }, { Authorization: "OAuth2: token" }, "file:///somepicture.jpg", function(entry) {
@@ -179,6 +192,28 @@ Downloads a file and saves it to the device.  Takes a URL, parameters, headers, 
         console.error(response.error);
     });
 
+
+## Example work plugin with promise in service:
+
+    angular.module('start.services').factory('AuthenticationService', function(SERVER, $q, $localstorage) {
+        function login(email, password){
+            var url = SERVER.urlApi + '/login';
+            var headers = { 'X-Authorization-API': SERVER.code };
+            var parameters = { email: email, password: password };
+            var deferred = $q.defer();
+            var promise = deferred.promise;
+            window.cordovaHTTP.post(url, parameters, headers, function(response) {            
+                deferred.resolve(data);
+            }, function(error) {
+                deferred.reject(error);
+            });
+            return promise;
+        }
+        
+        return {
+            doLogin: login
+        }
+    });
 
 ## Libraries
 
